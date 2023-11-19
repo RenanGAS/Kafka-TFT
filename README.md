@@ -43,6 +43,34 @@ Link: <https://overwolf.github.io/api/live-game-data/supported-games/teamfight-t
  
 - Ver o que fazer quanto à permissão de inscrição pro cluster Kafka na Confluent Cloud
 
+## Uso 
+
+- 1: Jogador quer streamar suas partidas 
+
+- 2: Jogador roda o Aplicativo e seleciona opção para começar a streamá-las
+
+- 3: Aplicativo começa a esperar pelo início de uma partida
+
+- 4: Jogador começa uma partida
+
+- 5: Aplicativo começa a enviar informações da partida para o tópico do Jogador
+
+- 6: Espectador quer assistir partidas do Jogador
+
+- 7: Espectador roda o Aplicativo e seleciona opção para assistir partidas do Jogador
+
+- 8: Aplicativo começa a pegar e exibir infomações da partida, que se encontram no tópico do Jogador
+
+- 9: Enquanto o Jogador não parar o serviço de streaming do Aplicativo, continua-se a escutar por partidas e a enviar informações delas quando começarem
+
+- 10: Enquanto o Jogador está streamando o Espectador consegue ver informações de partidas dele
+
+- 11: Quando o Jogador parar o serviço de streaming, o Aplicativo reseta o tópico mas não o deleta
+
+- 12: Quando um Jogador parar de streamar, o Espectador não vê mais informações de partidas na tela em que as informações das partidas apareciam
+
+- OBS: Como acontece na Twitch, mas sem stream de vídeo e áudio
+
 ## Anotações
 
 - Fazer o cliente em Typescript, aproveitando o código do Overwolf
@@ -57,6 +85,15 @@ Link: <https://overwolf.github.io/api/live-game-data/supported-games/teamfight-t
     - Colocar opção de armazenamento de logs de partida para replay?
     - Teria que se fazer um mecanismo de histórico para cada tópico?
 
+- Para preservar ordem, as mensagens tem que estar num mesmo tópico
+    - O que precisa de ordem:
+        - Vida
+        - Board
+        - Tempo
+
+- Qual a dificuldade?
+    - R: Como vou mandar as mensagens? De 2 em 2 minutos? Queria atualizar as infos de um jogador independentemente
+
 ## Dúvidas
 
 - Preciso criar um tópico para cada jogador? Consigo fazer isso?
@@ -65,11 +102,19 @@ Link: <https://overwolf.github.io/api/live-game-data/supported-games/teamfight-t
 
 - Fazer esquema de listar os jogadores/tópicos disponíveis para o Assinante se inscrever em novos jogadores/tópicos?
 
+- Os logs de um jogador precisam ser homogêneos? Consigo enviar logs de coisas diferentes para um mesmo tópico?
+
 ## Tarefas
 
 - Entender código do Overwolf
 
 - Entender REST API da Confluent Cloud
+
+- Fazer um parser para os logs de game_info
+    - Pra isso:
+        - Fazer pra não fechar a janela quando acaba o jogo
+        - Fazer um parser e formatar os dados numa mensagem só
+        - Ver como mandar os logs para um cluster Kafka
 
 - Integrar REST API no código do Overwolf
 
