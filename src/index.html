@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            html, body {
+                margin: 0px;
+                padding: 0px;
+                height: 100%;
+            }
+
+            .item1 { grid-area: header; 
+                    padding-right: 10px !important;
+                    text-align: right;}
+            .item2 { grid-area: menu;}
+            .item3 { grid-area: main; }
+            .item5 { grid-area: footer; 
+                    text-align: center;
+                    font-size: 20px !important;}
+
+            .grid-container {
+                display: grid;
+                grid-template-areas:
+                    'menu header header header header header header header'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu main main main main main main main'
+                    'menu footer footer footer footer footer footer footer'; 
+                gap: 1px; 
+                background-color: #000; 
+                height: 100%; 
+            }
+
+            .grid-container > div {
+                background-color: rgba(255, 255, 255, 0.8);
+                /* text-align: center; */
+                padding: 10px 0;
+                font-size: 30px;
+            }
+
+            /* Style the tab */
+            .tab {
+                overflow: hidden;
+                border: 1px solid #ccc;
+                background-color: #ccc;
+            }
+
+            /* Style the buttons that are used to open the tab content */
+            .tab button {
+                background-color: inherit;
+                font-size: 16px;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                padding: 0px;
+                transition: 0.3s;
+                display: block;
+                width: 100%;
+                height: 60px;
+            }
+
+            /* Change background color of buttons on hover */
+            .tab button:hover {
+                background-color: #ddd;
+            }
+
+            /* Create an active/current tablink class */
+            .tab button.active {
+                background-color: #000;
+                color: #fff;
+            }
+
+            /* Style the tab content */
+            .tabcontent {
+                display: none;
+                padding: 6px 12px;
+                border: 1px solid #ccc;
+                border-top: none;
+            }
+
+            .button {
+                border: none;
+                color: white;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                cursor: pointer;
+            }
+
+            .button-comecarT {background-color: #f44336;}
+
+            .jogador {display: block; margin-bottom: 10px;}
+
+            .button-espec {margin-left: 10px;
+                            background-color: #f44336;}
+            
+            .nome-jogador {font-size: 22px;
+                            width: fit-content;
+                            display: inline-block;
+                            }
+
+            .info-jogador {font-size: 22px;
+                            width: fit-content;
+                            margin-top: 10px;
+                            }
+
+            .container-img {margin: 40px 0 40px 0; align-items: center; justify-content: center; display: flex; width: 100%;}
+        </style>
+    </head>
+    <body>
+        <div class="grid-container">
+            <div class="item1">Jogador: SaKASOJA</div>
+
+            <!-- Menu -->
+            <div class="item2">
+                <div class="container-img">
+                    <img src="tftlogo.png" alt="TFT logo" style="width:270px; height:150px;">
+                </div>
+                <!-- Tab links -->
+                <div class="tab">
+                    <button class="tablinks" onclick="openTab(event, 'Transmitir')"id="defaultOpen">Transmitir</button>
+                    <button class="tablinks" onclick="openTab(event, 'Espectar')">Espectar</button>
+                    <button class="tablinks" onclick="openTab(event, 'Partida')">Partida</button>
+                </div>
+            </div>
+
+            <!-- main -->
+            <div class="item3">
+                <!-- Tab content -->
+                <div id="Transmitir" class="tabcontent">
+                    <button class="button button-comecarT">Começar Transmissão</button>
+                </div>
+
+                <div id="Espectar" class="tabcontent">
+                    <h3>Lista de jogadores em transmissão</h3>
+                    <div class="jogador">
+                        <div class="nome-jogador">Darkpulser</div>
+                        <button class="button button-espec">Espectar</button>
+                    </div>
+                    <div class="jogador">
+                        <div class="nome-jogador">HeadShotGameplays</div>
+                        <button class="button button-espec">Espectar</button>
+                    </div>
+                    <div class="jogador">
+                        <div class="nome-jogador">Killer192696</div>
+                        <button class="button button-espec">Espectar</button>
+                    </div>
+                    <div class="jogador">
+                        <div class="nome-jogador">Deus fê</div>
+                        <button class="button button-espec">Espectar</button>
+                    </div>
+                </div>
+
+                <div id="Partida" class="tabcontent">
+                    <h3>Informações da partida</h3>
+                    <div class="nome-jogador">Jogador: SaKASOJA</div>
+                    <div class="info-jogador">Estágio: 2-1</div>
+                    <div class="info-jogador">Vida: 91</div>
+                    <div class="info-jogador">Tabuleiro: Samira (2), Miss Fortune (2), Vex (3), K-Sante (2), Neeko (3)</div>
+                </div>
+            </div>  
+            <div class="item5">Todos direitos reservados @ 2023</div>
+        </div>
+    </body>
+    <script>
+        document.getElementById("defaultOpen").click();
+
+        function openTab(evt, tabName) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
+
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+</html>
+
+
+
