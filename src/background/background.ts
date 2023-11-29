@@ -9,12 +9,13 @@ import { kWindowNames, kGameClassIds } from "../consts";
 import RunningGameInfo = overwolf.games.RunningGameInfo;
 import AppLaunchTriggeredEvent = overwolf.extensions.AppLaunchTriggeredEvent;
 
-// The background controller holds all of the app's background logic - hence its name. it has
-// many possible use cases, for example sharing data between windows, or, in our case,
-// managing which window is currently presented to the user. To that end, it holds a dictionary
-// of the windows available in the app.
-// Our background controller implements the Singleton design pattern, since only one
-// instance of it should exist.
+
+// Detecta quando o jogo começa. Mostrando a tela desktop ou inGame 
+// No meu caso quero ativar essa detecção quando clico em transmitir,
+// ou seja, não colocar no manifest.json pra começar com esse "BackgroundController",
+// mas com a tela inicial, com o botão para instanciar um "BackgroundController" para
+// escutar eventos.
+// Ver se dá pra integrar as coisas da janela inGame aqui
 class BackgroundController {
   private static _instance: BackgroundController;
   private _windows: Record<string, OWWindow> = {};
@@ -23,14 +24,19 @@ class BackgroundController {
   private constructor() {
     // Populating the background controller's window dictionary
     this._windows[kWindowNames.desktop] = new OWWindow(kWindowNames.desktop);
-    this._windows[kWindowNames.inGame] = new OWWindow(kWindowNames.inGame);
+    //this._windows[kWindowNames.inGame] = new OWWindow(kWindowNames.inGame);
 
     // When a a supported game game is started or is ended, toggle the app's windows
     this._gameListener = new OWGameListener({
+
+      // Começar a escutar logs
       onGameStarted: this.toggleWindows.bind(this),
+
+      // Terminar a escuta de logs
       onGameEnded: this.toggleWindows.bind(this)
     });
 
+    // Escuta pelo começo de um jogo válido, ativando a janela inGame e desativando a desktop
     overwolf.extensions.onAppLaunchTriggered.addListener(
       e => this.onAppLaunchTriggered(e)
     );
@@ -73,6 +79,7 @@ class BackgroundController {
     }
   }
 
+  // Gerenciar o começo e término da escuta de logs?  
   private toggleWindows(info: RunningGameInfo) {
     if (!info || !this.isSupportedGame(info)) {
       return;
