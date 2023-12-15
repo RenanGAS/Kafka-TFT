@@ -134,7 +134,7 @@ Link: <https://overwolf.github.io/api/live-game-data/supported-games/teamfight-t
 - default.replication.factor
 - num.partitions
 
-#### Producer:
+### Producer:
 
 - batch.size
 - security.protocol
