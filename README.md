@@ -121,3 +121,28 @@ Link: <https://overwolf.github.io/api/live-game-data/supported-games/teamfight-t
 - Modificar código do Overwolf para ser Publicador e Assinante, com várias telas e um funcionamento diferente (não iniciar por conta própria quando começa um jogo)
 
 - Ver quais eventos capturar, de quanto em quanto tempo vamos enviar mensagens, e como vamos agrupar os eventos para formar uma mensagem com um determinado estado da partida
+
+## Configurações
+
+### Broker:
+
+- auto.leader.rebalance.enable
+- leader.imbalance.check.interval.seconds
+- leader.imbalance.per.broker.percentage
+- log.dir
+- min.insync.replicas
+- default.replication.factor
+- num.partitions
+
+### Producer:
+
+- batch.size
+- security.protocol
+- partitioner.adaptive.partitioning.enable
+
+### Consumer:
+
+- allow.auto.create.topics
+- auto.offset.reset
+- enable.auto.commit
+- security.protocol
