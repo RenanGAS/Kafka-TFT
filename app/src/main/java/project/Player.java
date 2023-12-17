@@ -1,56 +1,42 @@
 package project;
 
-import org.apache.kafka.clients.producer.*;
-
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
 public class Player {
 
-    public static void main(final String[] args) throws IOException {
+    public static void main(final String[] args) throws IOException, InterruptedException {
         if (args.length != 1) {
-            System.out.println("Please provide the configuration file path as a command line argument");
+            System.out.println("ERRO: Arquivo de configuração deve ser passado como argumento. Verifique a instrução no makefile.\n");
             System.exit(1);
         }
 
-        // Load producer configuration settings from a local file
-        final Properties props = loadConfig(args[0]);
-        final String topic = "quickstart-events";
+        Scanner scanner = new Scanner(System.in);
 
-        String[] users = {"eabara", "jsmith", "sgarcia", "jbernard", "htanaka", "awalther"};
-        String[] items = {"book", "alarm clock", "t-shirts", "gift card", "batteries"};
-        try (final Producer<String, String> producer = new KafkaProducer<>(props)) {
-            final Random rnd = new Random();
-            final Long numMessages = 10L;
-            for (Long i = 0L; i < numMessages; i++) {
-                String user = users[rnd.nextInt(users.length)];
-                String item = items[rnd.nextInt(items.length)];
+        System.out.print("Nome do jogador: ");
+        String nickname = scanner.nextLine();
 
-                producer.send(
-                        new ProducerRecord<>(topic, user, item),
-                        (event, ex) -> {
-                            if (ex != null)
-                                ex.printStackTrace();
-                            else
-                                System.out.printf("Produced event to topic %s: key = %-10s value = %s%n", topic, user, item);
-                        });
+        String logFileName;
+
+        while (true) {
+            System.out.print("Arquivo de log: ");
+            logFileName = scanner.nextLine();
+
+            try {
+                Path logFilePath = Paths.get("Logs/" + logFileName);
+                System.out.println(logFilePath.toString());
+            } catch (InvalidPathException ipe) {
+                System.out.println("\nERRO: " + ipe.getMessage() + "\n");
+                continue;
             }
-            System.out.printf("%s events were produced to topic %s%n", numMessages, topic);
+
+            break;
         }
 
-    }
-
-    // We'll reuse this function to load properties from the Consumer as well
-    public static Properties loadConfig(final String configFile) throws IOException {
-        if (!Files.exists(Paths.get(configFile))) {
-            throw new IOException(configFile + " not found.");
-        }
-        final Properties cfg = new Properties();
-        try (InputStream inputStream = new FileInputStream(configFile)) {
-            cfg.load(inputStream);
-        }
-        return cfg;
+        ProducerThread producer = new ProducerThread(nickname, logFileName);
+        producer.start();
+        producer.join();
     }
 }
 
