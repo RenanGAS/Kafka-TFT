@@ -14,20 +14,20 @@ public class Viewer {
             System.exit(1);
         }
 
-        final String topic = "quickstart-events";
+        // Configuração do consumidor
+        final Properties props = Admin.loadConfig(args[0]);
 
-        // Load consumer configuration settings from a local file
-        // Reusing the loadConfig method from the ProducerExample class
-        final Properties props = Player.loadConfig(args[0]);
-
-        // Add additional properties.
+        // Configurações adicionais
+        // Grupo do consumidor
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "kafka-java-getting-started");
+        // Em caso de falha, volta a pegar o evento mais novo disponível
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-        try (final Consumer<String, String> consumer = new KafkaConsumer<>(props)) {
-            consumer.subscribe(Arrays.asList(topic));
+        // Ver como consumir e receber comandos do terminal
+        try (final Consumer<String, String> consumerPlayersInLive = new KafkaConsumer<>(props)) {
+            consumerPlayersInLive.subscribe(Arrays.asList("listInLive"));
             while (true) {
-                ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
+                ConsumerRecords<String, String> records = consumerPlayersInLive.poll(Duration.ofMillis(100));
                 for (ConsumerRecord<String, String> record : records) {
                     String key = record.key();
                     String value = record.value();
