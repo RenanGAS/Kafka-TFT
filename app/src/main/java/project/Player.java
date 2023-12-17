@@ -17,14 +17,14 @@ public class Player {
         System.out.print("Nome do jogador: ");
         String nickname = scanner.nextLine();
 
-        String logFileName;
+        Path logFilePath = null;
 
         while (true) {
             System.out.print("Arquivo de log: ");
-            logFileName = scanner.nextLine();
+            String logFileName = scanner.nextLine();
 
             try {
-                Path logFilePath = Paths.get("Logs/" + logFileName);
+                logFilePath = Paths.get("Logs/" + logFileName);
                 System.out.println(logFilePath.toString());
             } catch (InvalidPathException ipe) {
                 System.out.println("\nERRO: " + ipe.getMessage() + "\n");
@@ -34,7 +34,7 @@ public class Player {
             break;
         }
 
-        ProducerThread producer = new ProducerThread(nickname, logFileName);
+        ProducerThread producer = new ProducerThread(nickname, logFilePath, args[0]);
         producer.start();
         producer.join();
     }
