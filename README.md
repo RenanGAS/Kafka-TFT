@@ -1,6 +1,6 @@
 # Kafka-TFT
 
-## Sobre o projeto
+## Sobre o Projeto
 
 Esta aplicação tem como objetivo possibilitar o acesso ao vivo a informações de partidas de Teamfight Tactics (TFT). O TFT é um
 jogo de multiplayer, em que cada jogador forma um time com peças do jogo, e o objetivo é sobreviver aos confrontos entre os jogadores
@@ -23,9 +23,9 @@ Na imagem abaixo, é apresentada a arquitetura da aplicação, com indicações 
 - `3.`: Amigo dos jogadores 1 e 2 se inscreve no tópico `Jogadores Online` para ver quais jogadores estão em transmissão.
 - `4.`: Amigo dos jogadores vê que o Jogador 1 está transmitindo e se inscreve em seu tópico para assistir a partida.
 
-![v2_arquitecture](https://github.com/RenanGAS/Kafka-TFT/assets/68087317/f91cbe45-4cfb-43c9-8879-0fdc67029959)
+![v2_arquitecture_v2 drawio](https://github.com/RenanGAS/Kafka-TFT/assets/68087317/21b061a9-ae5c-43fc-9b86-0b7b23f6aff9)
 
-## Implementação de tolerância a falhas
+## Implementação de Tolerância a Falhas
 
 Para a implementação de uma característica de Sistemas Distribuídos no projeto, configurou-se cada tópico com um `fator de replicação` igual
 a três. Desta forma, cada partição possui duas cópias, sendo elas chamadas de `seguidoras`, e a principal de `líder`. Com esta configuração,
@@ -39,9 +39,9 @@ temos que a dinâmica ocorre da seguinte forma:
 - Se uma partição `líder` falhar, as partições `seguidoras` começam um processo de eleição de uma nova partição `líder`. 
 - Com um `fator de replicação` igual a três, tolera-se a falha de duas partições.
 
-![cluster_detailed](https://github.com/RenanGAS/Kafka-TFT/assets/68087317/6e296846-5cde-4c94-916f-f0a90aa06879)
+![detailed_cluster drawio](https://github.com/RenanGAS/Kafka-TFT/assets/68087317/19c347e7-4ba3-4d30-8d87-6b7743df393c)
 
-## Interface de serviço
+## Interface de Serviço
 
 ### Player
 
