@@ -11,7 +11,7 @@ viewer:
 	mvn exec:java -Dexec.mainClass="project.Viewer" -Dexec.args="./src/main/java/project/config.properties"
 
 admin:
-	mvn exec:java -Dexec.mainClass="project.Admin"
+	mvn exec:java -Dexec.mainClass="project.AdminTasks"
 
 javadoc:
 	mvn javadoc:javadoc

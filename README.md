@@ -24,6 +24,10 @@ Aplicação para o acesso ao vivo a informações de partidas de Teamfight Tacti
 - default.replication.factor
 - num.partitions
 
+### Topic:
+
+- cleanup.policy: compact
+
 ### Player:
 
 - batch.size
