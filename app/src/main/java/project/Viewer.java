@@ -1,12 +1,15 @@
+/**
+ *
+ * Autor: Renan Guensuke Aoki Sakashita
+ *
+ */
+
 package project;
 
-import org.apache.kafka.clients.consumer.*;
-
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.Properties;
-import java.util.Scanner;
-
+/**
+ * Instancia thread para consumo de mensagens dos tópicos.
+ *
+ */
 public class Viewer {
     public static void main(final String[] args) throws Exception {
         if (args.length != 1) {

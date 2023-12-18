@@ -1,9 +1,20 @@
+/**
+ *
+ * Autor: Renan Guensuke Aoki Sakashita
+ *
+ */
+
 package project;
 
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
+/**
+ * Inicializa o produtor do jogador, recebendo o nome do tópico e o arquivo onde os logs da partida estão armazenados,
+ * instanciando também sua respectiva thread.
+ *
+ */
 public class Player {
 
     public static void main(final String[] args) throws IOException, InterruptedException {
