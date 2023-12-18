@@ -8,7 +8,7 @@ durante os vários estágios da partida, até que o último jogador adversário 
 o tempo decorrido e o estágio corrente, e eventos relacionados a um jogador, como sua vida, dinheiro e peças.
 
 Para poder realizar a transmissão dessas informações ao vivo, foi idealizado um sistema baseado na plataforma Apache Kafka, em que
-os jogadores seriam responsáveis por enviar as informações de sua partida para tópicos exclusivos deles, e quem quisesse assistir
+os jogadores seriam responsáveis por enviar as informações de suas partidas para tópicos exclusivos deles, e quem quisesse assistir
 a partida de um jogador, teria que se inscrever no tópico do mesmo, para receber as informações.
 
 O projeto foi feito em Java, e por enquanto não está integrado com a API que fornece os eventos do jogo. Para testes, está sendo
@@ -18,7 +18,7 @@ utilizado um arquivo `.txt` no diretório `./app/Logs`, com exemplos reais de ev
 
 Na imagem abaixo, é apresentada a arquitetura da aplicação, com indicações do fluxo principal de comunicação:
 
-- `1.`: Jogador 1 envia mensagem para o tópico `Jogadores Online`, para informar estará transmitindo sua partida.
+- `1.`: Jogador 1 envia mensagem para o tópico `Jogadores Online`, para informar que estará transmitindo sua partida.
 - `2.`: Jogador 1 envia mensagens para seu tópico `Jogador 1`, com eventos da partida.
 - `3.`: Amigo dos jogadores 1 e 2 se inscreve no tópico `Jogadores Online` para ver quais jogadores estão em transmissão.
 - `4.`: Amigo dos jogadores vê que o Jogador 1 está transmitindo e se inscreve em seu tópico para assistir a partida.
@@ -29,7 +29,7 @@ Na imagem abaixo, é apresentada a arquitetura da aplicação, com indicações 
 
 Para a implementação de uma característica de Sistemas Distribuídos no projeto, configurou-se cada tópico com um `fator de replicação` igual
 a três. Desta forma, cada partição possui duas cópias, sendo elas chamadas de `seguidoras`, e a principal de `líder`. Com esta configuração,
-se faz necessário a criação de mais dois `Brokers` para conter as partições seguidoras/líderes.
+se faz necessário a criação de mais dois `Brokers` para conter as partições seguidoras e líderes.
 
 Com estas mudanças, busca-se prover um mecanismo de tolerância a falhas para o `cluster`. Seguindo a ilustração do cenário na imagem abaixo,
 temos que a dinâmica ocorre da seguinte forma:
