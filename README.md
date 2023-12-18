@@ -16,42 +16,84 @@ utilizado um arquivo `.txt` no diretório `./app/Logs`, com exemplos reais de ev
 
 ## Arquitetura
 
+Na imagem abaixo, é apresentada a arquitetura da aplicação, com indicações do fluxo principal de comunicação:
+
+- `1.`: Jogador 1 envia mensagem para o tópico `Jogadores Online`, para informar estará transmitindo sua partida.
+- `2.`: Jogador 1 envia mensagens para seu tópico `Jogador 1`, com eventos da partida.
+- `3.`: Amigo dos jogadores 1 e 2 se inscreve no tópico `Jogadores Online` para ver quais jogadores estão em transmissão.
+- `4.`: Amigo dos jogadores vê que o Jogador 1 está transmitindo e se inscreve em seu tópico para assistir a partida.
+
 ![v2_arquitecture](https://github.com/RenanGAS/Kafka-TFT/assets/68087317/f91cbe45-4cfb-43c9-8879-0fdc67029959)
 
 ## Implementação de tolerância a falhas
 
-- Replicação de partições
+Para a implementação de uma característica de Sistemas Distribuídos no projeto, configurou-se cada tópico com um `fator de replicação` igual
+a três. Desta forma, cada partição possui duas cópias, sendo elas chamadas de `seguidoras`, e a principal de `líder`. Com esta configuração,
+se faz necessário a criação de mais dois `Brokers` para conter as partições seguidoras/líderes.
+
+Com estas mudanças, busca-se prover um mecanismo de tolerância a falhas para o `cluster`. Seguindo a ilustração do cenário na imagem abaixo,
+temos que a dinâmica ocorre da seguinte forma:
+
+- Dada uma partição 0, operações de escrita e leitura serão feitas sobre a partição 0 `líder`.
+- Quando uma escrita é feita, as partições 0 `seguidoras` serão notificadas, e então farão requisições para partição `líder` para se atualizarem.
+- Se uma partição `líder` falhar, as partições `seguidoras` começam um processo de eleição de uma nova partição `líder`. 
+- Com um `fator de replicação` igual a três, tolera-se a falha de duas partições.
 
 ![cluster_detailed](https://github.com/RenanGAS/Kafka-TFT/assets/68087317/6e296846-5cde-4c94-916f-f0a90aa06879)
 
 ## Interface de serviço
 
-## Configuração
+### Player
 
-### Broker:
+No momento o sistema pergunta ao jogador seu `nickname` e o arquivo em que está os logs de sua partida.
 
-- auto.leader.rebalance.enable
-- leader.imbalance.check.interval.seconds
-- leader.imbalance.per.broker.percentage
-- log.dir
-- min.insync.replicas
-- default.replication.factor
-- num.partitions
+### Viewer
 
-### Topic:
+- **<ins>listar</ins>**:
+    - Retorno: Lista jogadores online.
 
-- cleanup.policy: compact
+- **<ins>assistir</ins>**:
+    - Parâmetro: `nickname` do jogador.
+    - Retorno: Inscrição no tópico do jogador.
 
-### Player:
+- **<ins>status</ins>**:
+    - Retorno: Informações da partida do jogador. 
 
-- batch.size
-- security.protocol
-- partitioner.adaptive.partitioning.enable
+- **<ins>sair</ins>**:
+    - Retorno: Cancelamento da inscrição no tópico do jogador. 
 
-### Viewer:
+## Configurações
 
-- allow.auto.create.topics
-- auto.offset.reset
-- enable.auto.commit
-- security.protocol
+Cada entidade da plataforma Kafka foi configurada conforme mostrado abaixo.
+
+### Brokers 0, 1 e 2:
+
+- `broker.id=0` | `broker.id=1` | `broker.id=2`
+    - ID único para cada `broker`.
+- `listeners=PLAINTEXT://localhost:9092` | `listeners=PLAINTEXT://localhost:9093` | `listeners=PLAINTEXT://localhost:9094`
+    - Endereço de cada `broker`.
+- `num.partitions=3`
+    - Número de partições para cada tópico criado.
+- `offsets.topic.replication.factor=3`
+    - Fator de replicação para as partições dos tópicos.
+- `log.cleaner.enable=true`
+    - Configuração necessária para utilzação de `cleanup.policy=compact` nos tópicos. 
+
+### Tópicos:
+
+- `cleanup.policy=compact`
+    - Tópicos mantém apenas as mensagens mais recentes de uma determinada chave. Desta forma, tanto da partida como da lista de jogadores online, preserva-se as últimas informações.
+    - Dada a sequência de mensagens de uma partida: vida:90 | vida:70 | estágio:2-1 | vida:60 | estágio:2-2 | dinheiro:30 | dinheiro:25, mantém-se no tópico: vida:60 | dinheiro:25 | estágio:2-2.
+    - Dada a sequência de mensagens na lista de jogadores online: jogador1:online | jogador2:online | jogador1:offline | jogador3:online | jogador2:offline, mantém-se: jogador1:offline | jogador2:offline | jogador3:online.
+
+### Produtores (Jogadores) e Consumidores (Espectadores):
+
+- `bootstrap.servers=localhost:9092,localhost:9093,localhost:9094`
+    - Endereços dos `brokers`.
+
+- `key.serializer=org.apache.kafka.common.serialization.StringSerializer`
+- `value.serializer=org.apache.kafka.common.serialization.StringSerializer`
+- `key.deserializer=org.apache.kafka.common.serialization.StringDeserializer`
+- `value.deserializer=org.apache.kafka.common.serialization.StringDeserializer`
+    - Tratamento das mensagens (key, value) como Strings.
 
