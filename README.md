@@ -16,7 +16,9 @@ utilizado um arquivo `.txt` no diretório `./app/Logs`, com exemplos reais de ev
 
 ## Arquitetura
 
-![kafka_tft_architecture drawio](https://github.com/RenanGAS/Kafka-TFT/assets/68087317/5c22c9a2-f24d-4158-86b4-b459db0aa19c)
+![v2_arquitecture](https://github.com/RenanGAS/Kafka-TFT/assets/68087317/f91cbe45-4cfb-43c9-8879-0fdc67029959)
+
+![cluster_detailed](https://github.com/RenanGAS/Kafka-TFT/assets/68087317/6e296846-5cde-4c94-916f-f0a90aa06879)
 
 ## Implementação de tolerância a falhas
 
