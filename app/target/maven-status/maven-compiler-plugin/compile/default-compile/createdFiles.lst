@@ -1,4 +1,5 @@
-project/Admin.class
 project/Player.class
 project/Viewer.class
 project/ProducerThread.class
+project/AdminTasks.class
+project/ConsumerThread.class
