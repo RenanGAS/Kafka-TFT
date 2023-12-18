@@ -9,6 +9,8 @@ import java.nio.file.*;
 import java.util.*;
 
 import org.json.JSONObject;
+import java.util.concurrent.ExecutionException;
+import java.lang.InterruptedException;
 
 public class ProducerThread extends Thread {
     String nickname;
@@ -23,22 +25,29 @@ public class ProducerThread extends Thread {
 
     @Override
     public void run() {
+        // O nome do tópico de um jogador corresponde ao seu nickname
+        final String topic = this.nickname;
+
         Properties props = null;
 
         try {
             // Carrega configurações do produtor
-            props = Admin.loadConfig(this.configFile);
+            props = AdminTasks.loadConfig(this.configFile);
+
+            // Cria tópico
+            AdminTasks.createTopic(topic);
         } catch (IOException ioe) {
             System.out.println("\nERRO: " + ioe.getMessage() + "\n");
+        } catch (ExecutionException | InterruptedException ex) {
+            System.out.println("\nERRO: " + ex.getMessage() + "\n");
         }
-
-        // O nome do tópico de um jogador corresponde ao seu nickname
-        final String topic = this.nickname;
 
         System.out.println("\nTransmissão em andamento...\n");
 
         try (final Producer<String, String> producer = new KafkaProducer<>(props)) {
-            System.out.println(this.logFilePath.toString());
+            // Mensagem para o tópico "listPlayers", indicando que o jogador está em transmissão
+            producer.send(new ProducerRecord<>("listPlayers", topic, "online"));
+
             try (BufferedReader br = new BufferedReader(new FileReader(new File(this.logFilePath.toString())))) {
                 String line;
                 while ((line = br.readLine()) != null) {
@@ -95,10 +104,15 @@ public class ProducerThread extends Thread {
                             System.out.println("\nERRO: Evento não esperado.\n");
                             break;
                     }
+
+                    // Envia um evento a cada 5 segundos
+                    Thread.sleep(5000);
                 }
-            } catch (IOException ioe) {
+            } catch (InterruptedException | IOException ioe) {
                 System.out.println("\nERRO: " + ioe.getMessage() + "\n");
             }
+
+            producer.send(new ProducerRecord<>("listPlayers", topic, "offline"));
         }
     }
 }
