@@ -3,20 +3,20 @@
 ## Sobre o Projeto
 
 Esta aplicação tem como objetivo possibilitar o acesso ao vivo a informações de partidas de Teamfight Tactics (TFT). O TFT é um
-jogo de multiplayer, em que cada jogador forma um time com peças do jogo, e o objetivo é sobreviver aos confrontos entre os jogadores
-durante os vários estágios da partida, até que o último jogador adversário seja eliminado. De uma partida é possível extrair dados como
-o tempo decorrido e o estágio corrente, e eventos relacionados a um jogador, como sua vida, dinheiro e peças.
+jogo multiplayer, em que cada jogador forma um time e o objetivo é sobreviver a confrontos com jogadores adversários
+durante estágios da partida, até que o último inimigo seja eliminado. De uma partida é possível extrair dados como
+o tempo decorrido e o estágio corrente, e eventos relacionados a um jogador, como sua vida, dinheiro e campeões.
 
 Para poder realizar a transmissão dessas informações ao vivo, foi idealizado um sistema baseado na plataforma Apache Kafka, em que
 os jogadores seriam responsáveis por enviar as informações de suas partidas para tópicos exclusivos deles, e quem quisesse assistir
 a partida de um jogador, teria que se inscrever no tópico do mesmo, para receber as informações.
 
-O projeto foi feito em Java, e por enquanto não está integrado com a API que fornece os eventos do jogo. Para testes, está sendo
-utilizado um arquivo `.txt` no diretório `./app/Logs`, com exemplos reais de eventos emitidos, no formato `JSON`.
+O projeto foi feito em Java, e por enquanto não está integrado com a API que fornece os eventos do jogo ([Overwolf](https://overwolf.github.io/api/live-game-data/supported-games/teamfight-tactics)). Para testes, está sendo
+utilizado um arquivo `.txt` no diretório `./app/Logs`, com exemplos reais de eventos do jogo, no formato `JSON`.
 
 ## Arquitetura
 
-Na imagem abaixo, é apresentada a arquitetura da aplicação, com indicações do fluxo principal de comunicação:
+Na imagem abaixo é apresentada a arquitetura da aplicação, com indicações do fluxo principal de comunicação:
 
 - `1.`: Jogador 1 envia mensagem para o tópico `Jogadores Online`, para informar que estará transmitindo sua partida.
 - `2.`: Jogador 1 envia mensagens para seu tópico `Jogador 1`, com eventos da partida.
@@ -29,15 +29,15 @@ Na imagem abaixo, é apresentada a arquitetura da aplicação, com indicações 
 
 Para a implementação de uma característica de Sistemas Distribuídos no projeto, configurou-se cada tópico com um `fator de replicação` igual
 a três. Desta forma, cada partição possui duas cópias, sendo elas chamadas de `seguidoras`, e a principal de `líder`. Com esta configuração,
-se faz necessário a criação de mais dois `Brokers` para conter as partições seguidoras e líderes.
+se faz necessário a criação de mais dois `Brokers` para conter as partições seguidoras.
 
-Com estas mudanças, busca-se prover um mecanismo de tolerância a falhas para o `cluster`. Seguindo a ilustração do cenário na imagem abaixo,
+Esta mudança busca prover um mecanismo de tolerância a falhas para o `cluster`. Seguindo a ilustração do cenário na imagem abaixo,
 temos que a dinâmica ocorre da seguinte forma:
 
 - Dada uma partição 0, operações de escrita e leitura serão feitas sobre a partição 0 `líder`.
-- Quando uma escrita é feita, as partições 0 `seguidoras` serão notificadas, e então farão requisições para partição `líder` para se atualizarem.
-- Se uma partição `líder` falhar, as partições `seguidoras` começam um processo de eleição de uma nova partição `líder`. 
-- Com um `fator de replicação` igual a três, tolera-se a falha de duas partições.
+- Quando uma escrita é feita, as partições 0 `seguidoras` são notificadas, e então fazem requisições para partição `líder` para se atualizarem.
+- Se uma partição `líder` falha, as partições `seguidoras` começam um processo de eleição de uma nova partição `líder`. 
+- Com um `fator de replicação` igual a três, tolera-se duas falhas.
 
 ![detailed_cluster drawio](https://github.com/RenanGAS/Kafka-TFT/assets/68087317/19c347e7-4ba3-4d30-8d87-6b7743df393c)
 
@@ -45,7 +45,7 @@ temos que a dinâmica ocorre da seguinte forma:
 
 ### Player
 
-No momento o sistema pergunta ao jogador seu `nickname` e o arquivo em que está os logs de sua partida.
+No momento o sistema pergunta ao jogador seu `nickname` e o arquivo em que está os logs de sua partida. Por enquanto não há outras interações com o jogador.
 
 ### Viewer
 
@@ -64,7 +64,7 @@ No momento o sistema pergunta ao jogador seu `nickname` e o arquivo em que está
 
 ## Configurações
 
-Cada entidade da plataforma Kafka foi configurada conforme mostrado abaixo.
+Cada entidade da plataforma Kafka foi configurada da seguinte forma.
 
 ### Brokers 0, 1 e 2:
 
