@@ -23,7 +23,7 @@ Na imagem abaixo é apresentada a arquitetura da aplicação, com indicações d
 - `3.`: Amigo dos jogadores 1 e 2 se inscreve no tópico `Jogadores Online` para ver quais jogadores estão em transmissão.
 - `4.`: Amigo dos jogadores vê que o Jogador 1 está transmitindo e se inscreve em seu tópico para assistir a partida.
 
-![v2_arquitecture_v2_2 drawio](https://github.com/RenanGAS/Kafka-TFT/assets/68087317/dce837f7-3827-4e74-be4f-bf023040ca0f)
+![v2_arquitecture_v2 drawio](https://github.com/RenanGAS/Kafka-TFT/assets/68087317/c96f833c-9e32-47af-ba95-8e18e6e20bc4)
 
 ## Implementação de Tolerância a Falhas
 
